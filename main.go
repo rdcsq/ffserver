@@ -15,8 +15,10 @@ func main() {
 	log.Printf("Starting server in %v\n", env.ListeningAddress)
 
 	heartbeat := http.HandlerFunc(api.Heartbeat)
+	getStreams := http.HandlerFunc(api.GetStreams)
 
 	http.Handle("GET /", middleware(heartbeat))
+	http.Handle("POST /streams", middleware(getStreams))
 	http.ListenAndServe(env.ListeningAddress, nil)
 }
 
