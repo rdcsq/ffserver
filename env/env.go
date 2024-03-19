@@ -10,6 +10,7 @@ import (
 var (
 	ListeningAddress string
 	AuthSecret       []byte
+	Domain           string
 )
 
 func LoadEnv() {
@@ -27,4 +28,9 @@ func LoadEnv() {
 	}
 
 	AuthSecret = []byte(os.Getenv("AUTH_SECRET"))
+
+	Domain = os.Getenv("DOMAIN")
+	if Domain == "" {
+		Domain = "http://0.0.0.0:3000"
+	}
 }

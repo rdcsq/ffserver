@@ -15,14 +15,19 @@ import (
 func main() {
 	log.Println("Starting")
 	env.LoadEnv()
+
 	log.Printf("ffmpeg version: %v\n", ffmpeg.GetVersion())
 	log.Printf("Starting server in %v\n", env.ListeningAddress)
 
 	heartbeat := http.HandlerFunc(api.Heartbeat)
 	getStreams := http.HandlerFunc(api.GetStreams)
+	generateThumbnail := http.HandlerFunc(api.GenerateThumbnail)
+	getThumbnail := http.HandlerFunc(api.GetThumbnail)
 
 	http.Handle("GET /", middleware(heartbeat))
 	http.Handle("POST /streams", middleware(getStreams))
+	http.Handle("POST /thumbnail", middleware(generateThumbnail))
+	http.Handle("GET /thumbnail/{id}", middleware(getThumbnail))
 	http.ListenAndServe(env.ListeningAddress, nil)
 }
 
