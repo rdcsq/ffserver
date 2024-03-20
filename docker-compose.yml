@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  ffserver:
+    build: . 
+    # image: ffserver # if you prefer having the docker-compose file outside of the source code folder.
+    ports: 
+      - 3000:3000
+    environment:
+      - DOMAAIN=https://example.com # CHANGEME
+      - AUTH_SECRET=CHANGEMEPLEASEFORYOURSECURITY:((((
