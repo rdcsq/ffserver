@@ -4,6 +4,7 @@ import (
 	"ffserver/api"
 	"ffserver/env"
 	"ffserver/ffmpeg"
+	"ffserver/utils"
 	"fmt"
 	"log"
 	"net/http"
@@ -29,6 +30,13 @@ func main() {
 	}
 
 	env.LoadEnv()
+
+	token, err := utils.GenerateDefaultJwt()
+	if err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+	log.Printf("default jwt: %v", token)
 
 	log.Printf("ffmpeg version: %v\n", ffmpeg.GetVersion())
 	log.Printf("Starting server in %v\n", env.ListeningAddress)
