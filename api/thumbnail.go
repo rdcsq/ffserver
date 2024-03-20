@@ -20,23 +20,24 @@ type GenerateThumbnailDto struct {
 func GenerateThumbnail(w http.ResponseWriter, r *http.Request) {
 	var dto GenerateThumbnailDto
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
-		RespondWithError(w, 400, "Bad Request")
+		RespondWithError(w, 400, "bad_body")
 		return
 	}
 
 	if dto.Url == "" {
-		RespondWithError(w, 400, "Empty URL")
+		RespondWithError(w, 400, "no_url")
 		return
 	}
 
 	if dto.Format != "webp" && dto.Format != "png" && dto.Format != "jpeg" && dto.Format != "jpg" {
-		RespondWithError(w, 400, "Bad format")
+		RespondWithError(w, 400, "unsupported_format")
 		return
 	}
 
 	id, err := ffmpeg.GenerateThumbnail(dto.Url, dto.Format)
 	if err != nil {
 		if _, ok := err.(*exec.ExitError); ok {
+			// TODO: add ffmpeg output
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]any{
 				"error_code": "ffmpeg",
