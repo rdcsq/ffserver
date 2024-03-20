@@ -10,6 +10,7 @@ func GetVersion() string {
 	out, err := exec.Command("ffmpeg", "-version").Output()
 	if err != nil {
 		log.Fatalln(err)
+		return ""
 	}
 	output := string(out)
 	start_index := strings.Index(output, "version") + 8
