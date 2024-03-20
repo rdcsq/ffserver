@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,6 +16,18 @@ import (
 
 func main() {
 	log.Println("Starting")
+
+	// Check if FFmpeg is installed
+	if err := exec.Command("ffmpeg", "-version").Run(); err != nil {
+		log.Println("FFmpeg is not present in the system. Exiting...")
+		os.Exit(1)
+	}
+
+	if err := exec.Command("ffprobe", "-version").Run(); err != nil {
+		log.Println("FFprobe is not present in the system. Exiting...")
+		os.Exit(1)
+	}
+
 	env.LoadEnv()
 
 	log.Printf("ffmpeg version: %v\n", ffmpeg.GetVersion())
