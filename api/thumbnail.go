@@ -5,8 +5,10 @@ import (
 	"ffserver/env"
 	"ffserver/ffmpeg"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -34,7 +36,14 @@ func GenerateThumbnail(w http.ResponseWriter, r *http.Request) {
 
 	id, err := ffmpeg.GenerateThumbnail(dto.Url, dto.Format)
 	if err != nil {
-		// TODO: properly handle errors
+		if _, ok := err.(*exec.ExitError); ok {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(map[string]any{
+				"error_code": "ffmpeg",
+			})
+			return
+		}
+		log.Println(err)
 		RespondWithInternalServerError(w)
 		return
 	}
